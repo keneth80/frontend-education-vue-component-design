@@ -1,6 +1,6 @@
 <template>
     <div class="todo-input">
-        <input type="text" class="todo-input-control" />
+        <input ref="input" type="text" class="todo-input-control" />
     </div>
 </template>
 <style lang="scss">
@@ -13,6 +13,7 @@
 </style>
 
 <script lang="ts">
+import {debounceTime, distinctUntilChanged, fromEvent, Subscription} from 'rxjs';
 import {Component, Vue, Prop} from 'vue-property-decorator';
 
 @Component
@@ -23,5 +24,24 @@ export default class InputComponent extends Vue {
         }
     })
     public readonly input?: string;
+
+    private subscription: Subscription = new Subscription();
+
+    protected mounted() {
+        this.subscription.add(
+            fromEvent(this.$refs.input as HTMLElement, 'input')
+                .pipe(debounceTime(500), distinctUntilChanged())
+                .subscribe((event: Event) => {
+                    const textValue = (event.target as HTMLInputElement).value;
+                    this.$emit('changeContent', {
+                        content: textValue
+                    });
+                })
+        );
+    }
+
+    protected destroyed() {
+        this.subscription.unsubscribe();
+    }
 }
 </script>

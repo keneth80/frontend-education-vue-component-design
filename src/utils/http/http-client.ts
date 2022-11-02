@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
-import {axiosInstance} from '../../mock';
 import {Observable, Observer} from 'rxjs';
+import {axiosInstance} from '../../mock';
 
 export interface CustomHttpResponse<T = any> {
     data: T;

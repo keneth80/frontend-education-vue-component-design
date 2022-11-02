@@ -6,7 +6,7 @@
             </div>
         </div>
         <div class="todo-item-end">
-            <input-component />
+            <input-component @changeContent="onChangeContent" />
             <!-- <div class="todo-input">
                 <input type="text" class="todo-input-control" />
             </div> -->
@@ -87,5 +87,9 @@ export default class TodoItemComponent extends Vue {
         }
     })
     public readonly item?: TodoItem;
+
+    public onChangeContent({content}: {content: string}) {
+        console.log('onChangeContent : ', content);
+    }
 }
 </script>
