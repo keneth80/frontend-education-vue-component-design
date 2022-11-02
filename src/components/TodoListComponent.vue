@@ -1,5 +1,6 @@
 <template>
     <div class="todo-list">
+        <todo-item-component />
         <template v-if="todoList?.length">
             <todo-item-component v-for="(todo, index) in todoList" :key="index" />
             <!-- <todo-item-component-second v-for="(todo, index) in todoList" :key="index" /> -->

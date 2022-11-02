@@ -6,9 +6,10 @@
             </div>
         </div>
         <div class="todo-item-end">
-            <div class="todo-input">
+            <input-component />
+            <!-- <div class="todo-input">
                 <input type="text" class="todo-input-control" />
-            </div>
+            </div> -->
             <div class="todo-thumb">
                 <img src="https://dummyimage.com/200x200/61d2ff/fff" class="todo-thumb-image" alt="thumbnail" />
             </div>
@@ -75,13 +76,18 @@
 
 <script lang="ts">
 import {Component, Vue, Prop} from 'vue-property-decorator';
+import InputComponent from './form/InputComponent.vue';
 
 export interface TodoItem {
     title?: string;
     contents: string;
 }
 
-@Component
+@Component({
+    components: {
+        InputComponent
+    }
+})
 export default class TodoItemComponentSecond extends Vue {
     @Prop({
         default: function () {
