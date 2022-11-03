@@ -6,10 +6,9 @@
             </div>
         </div>
         <div class="todo-item-end">
-            <input-component />
-            <!-- <div class="todo-input">
+            <div class="todo-input">
                 <input type="text" class="todo-input-control" />
-            </div> -->
+            </div>
             <div class="todo-thumb">
                 <img src="https://dummyimage.com/200x200/61d2ff/fff" class="todo-thumb-image" alt="thumbnail" />
             </div>

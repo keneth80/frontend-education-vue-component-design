@@ -4,7 +4,7 @@
             <button @click="onClickAddContent">추가</button>
         </div>
         <div class="editor-body">
-            <textarea v-model="contents" />
+            <text-area-component @changeContent="onChangeContentHandler" />
         </div>
     </div>
 </template>
@@ -29,8 +29,13 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
+import TextAreaComponent from './form/TextAreaComponent.vue';
 
-@Component
+@Component({
+    components: {
+        TextAreaComponent
+    }
+})
 export default class EditorComponent extends Vue {
     public contents = '';
 
@@ -38,6 +43,10 @@ export default class EditorComponent extends Vue {
         this.$emit('addTodo', {
             content: this.contents
         });
+    }
+
+    public onChangeContentHandler(value: any) {
+        console.log('onChangeContentHandler : ', value);
     }
 }
 </script>
