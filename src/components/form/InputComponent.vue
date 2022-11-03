@@ -29,14 +29,12 @@ export default class InputComponent extends Vue {
 
     protected mounted() {
         this.subscription.add(
-            fromEvent(this.$refs.input as HTMLElement, 'input')
-                .pipe(debounceTime(500), distinctUntilChanged())
-                .subscribe((event: Event) => {
-                    const textValue = (event.target as HTMLInputElement).value;
-                    this.$emit('changeContent', {
-                        content: textValue
-                    });
-                })
+            fromEvent(this.$refs.input as HTMLElement, 'input').subscribe((event: Event) => {
+                const textValue = (event.target as HTMLInputElement).value;
+                this.$emit('changeContent', {
+                    content: textValue
+                });
+            })
         );
     }
 
