@@ -1,16 +1,11 @@
 <template>
     <div class="todo-item">
-        <div class="todo-item-start">
-            <div class="todo-checkbox">
-                <input type="checkbox" class="todo-checkbox-control" />
-            </div>
-        </div>
         <div class="todo-item-end">
             <div class="todo-input">
-                <input type="text" class="todo-input-control" />
+                <input type="text" class="todo-input-control" :value="content" />
             </div>
             <div class="todo-thumb">
-                <button>삭제</button>
+                <button @click="onClickDeleteHanlder">삭제</button>
             </div>
         </div>
     </div>
@@ -39,7 +34,7 @@
 
     .todo-input-control {
         padding: 0.8rem;
-        width: 19rem;
+        width: 21rem;
         height: 2.4rem;
         border: 1px solid #b7b7b7;
     }
@@ -66,13 +61,9 @@
 </style>
 
 <script lang="ts">
+import {Todo} from '@/mock';
 import {Component, Vue, Prop} from 'vue-property-decorator';
 import InputComponent from './form/InputComponent.vue';
-
-export interface TodoItem {
-    title?: string;
-    contents: string;
-}
 
 @Component({
     components: {
@@ -85,10 +76,16 @@ export default class TodoItemComponent extends Vue {
             return null;
         }
     })
-    public readonly item?: TodoItem;
+    public readonly item?: Todo;
 
-    public onChangeContent({content}: {content: string}) {
-        console.log('onChangeContent : ', content);
+    get content() {
+        return this.item?.content;
+    }
+
+    public onClickDeleteHanlder() {
+        this.$emit('removeTodo', {
+            todoId: this.item?.todoId
+        });
     }
 }
 </script>

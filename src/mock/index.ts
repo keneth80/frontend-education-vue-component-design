@@ -94,7 +94,7 @@ mockAdapter
             console.log('add todo : ', config);
             const targetTodo: TodoResponse = {
                 ...JSON.parse(config.data || {}),
-                todoId: todos.length
+                todo_id: todos.length
             };
             todos.push(targetTodo);
             return [200, targetTodo];

@@ -1,7 +1,7 @@
 <template>
     <div class="todo-list">
         <template v-if="todoList?.length">
-            <todo-item-component v-for="(todo, index) in todoList" :key="index" />
+            <todo-item-component v-for="(todo, index) in todoList" :item="todo" :key="index" @removeTodo="onRemoveTodoHandler" />
             <!-- <todo-item-component-second v-for="(todo, index) in todoList" :key="index" /> -->
         </template>
         <template v-else>
@@ -34,5 +34,9 @@ export default class TodoListComponent extends Vue {
         }
     })
     public todoList?: Array<any>;
+
+    public onRemoveTodoHandler(value: any) {
+        this.$emit('removeTodo', value);
+    }
 }
 </script>

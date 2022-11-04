@@ -2,7 +2,7 @@
     <div class="todo">
         <title-component :title="title" />
         <editor-component @addTodo="onAddTodoHandler" />
-        <todo-list-component :todoList="todoList" />
+        <todo-list-component :todoList="todoList" @removeTodo="onRemoveTodoHandler" />
     </div>
 </template>
 
@@ -63,6 +63,10 @@ export default class LayoutView extends Vue {
                 console.log('this.todoListValue : ', this.todoListValue);
                 alert('추가되었습니다.');
             });
+    }
+
+    public onRemoveTodoHandler({todoId}: {todoId: number}) {
+        console.log('onRemoveTodoHandler : ', todoId);
     }
 
     protected created() {
