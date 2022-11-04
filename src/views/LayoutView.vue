@@ -19,7 +19,7 @@ import TitleComponent from '@/components/TitleComponent.vue';
 import EditorComponent from '@/components/EditorComponent.vue';
 import EditorComponentSecond from '@/components/EditorComponentSecond.vue';
 import TodoListComponent from '@/components/TodoListComponent.vue';
-import {getTodoWithUser, addTodo, getTodos} from '@/controller';
+import {getTodoWithUser, addTodo, getTodos, removeTodo} from '@/controller';
 import {User, Todo} from '@/mock';
 import {switchMap} from 'rxjs';
 
@@ -45,8 +45,6 @@ export default class LayoutView extends Vue {
     }
 
     public onAddTodoHandler({content}: any) {
-        console.log('onAddTodoHandler : ', content);
-
         if (!content || !content.trim().length) return;
 
         addTodo({
@@ -60,13 +58,21 @@ export default class LayoutView extends Vue {
             )
             .subscribe((response: Array<Todo>) => {
                 this.todoListValue = response;
-                console.log('this.todoListValue : ', this.todoListValue);
                 alert('추가되었습니다.');
             });
     }
 
     public onRemoveTodoHandler({todoId}: {todoId: number}) {
-        console.log('onRemoveTodoHandler : ', todoId);
+        removeTodo(todoId)
+            .pipe(
+                switchMap(() => {
+                    return getTodos(this.userId);
+                })
+            )
+            .subscribe((response: Array<Todo>) => {
+                this.todoListValue = response;
+                alert('삭제되었습니다');
+            });
     }
 
     protected created() {
@@ -75,7 +81,6 @@ export default class LayoutView extends Vue {
         getTodoWithUser(this.userId).subscribe((response: {user: User; todos: Array<Todo>}) => {
             this.userName = response.user.nickName;
             this.todoListValue = response.todos;
-            console.log('getTodoWithUser : ', response);
         });
     }
 }

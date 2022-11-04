@@ -27,7 +27,6 @@ function mappingTodoResponse({user_id, content, todo_id}: TodoResponse): Todo {
 }
 
 export function addTodo(value: TodoRequest): Observable<Todo> {
-    console.log('addTodo : ', value);
     return Http.post('/todos', value).pipe(
         map((response: CustomHttpResponse<TodoResponse>) => {
             return mappingTodoResponse(response.data);
@@ -64,7 +63,6 @@ export function modifyTodo(todoId: number): Observable<{
 }
 
 export function getTodos(userId: number): Observable<Array<Todo>> {
-    console.log('getTodos : ', userId);
     return Http.get(`/todos/${userId}`).pipe(
         map((response: CustomHttpResponse<Array<TodoResponse>>) => {
             return response.data.map((todo: TodoResponse) => mappingTodoResponse(todo));

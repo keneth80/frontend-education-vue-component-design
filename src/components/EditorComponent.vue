@@ -47,7 +47,6 @@ export default class EditorComponent extends Vue {
 
     public onChangeContentHandler(value: any) {
         this.contents = value.content;
-        console.log('onChangeContentHandler : ', value.content);
     }
 }
 </script>

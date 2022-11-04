@@ -1,5 +1,5 @@
-import axios from 'axios';
-import AxiosMockAdapter from 'axios-mock-adapter-path-params';
+import axios, {AxiosRequestConfig} from 'axios';
+import AxiosMockAdapter, {RouteParams} from 'axios-mock-adapter-path-params';
 
 const routeParams = {
     ':userId': '[0-9]{1,8}',
@@ -72,16 +72,15 @@ mockAdapter
             return [500, {message: 'Internal server error'}];
         }
     });
-
+type AxiosRequestRouteConfig = AxiosRequestConfig & {routeParams: RouteParams};
 // todo data setup
 const todoUri = '/todos';
 const todos: Array<TodoResponse> = [];
 mockAdapter
     .onGet(`${todoUri}/:userId`)
-    .reply((config: any) => {
+    .reply((config: AxiosRequestConfig) => {
         try {
-            const {userId} = config.routeParams;
-            console.log('todos : ', userId, todos);
+            const {userId} = (config as AxiosRequestRouteConfig).routeParams;
             return [200, [...todos.filter((todo: TodoResponse) => todo.user_id + '' === userId)]];
         } catch (error) {
             console.error(error);
@@ -89,9 +88,8 @@ mockAdapter
         }
     })
     .onPost(`${todoUri}`)
-    .reply((config: any) => {
+    .reply((config: AxiosRequestConfig) => {
         try {
-            console.log('add todo : ', config);
             const targetTodo: TodoResponse = {
                 ...JSON.parse(config.data || {}),
                 todo_id: todos.length
@@ -104,9 +102,9 @@ mockAdapter
         }
     })
     .onDelete(`${todoUri}/:todoId`)
-    .reply((config: any) => {
+    .reply((config: AxiosRequestConfig) => {
         try {
-            const {todoId} = config.routeParams;
+            const {todoId} = (config as AxiosRequestRouteConfig).routeParams;
             const targetIndex = todos.findIndex((value: TodoResponse) => value.todo_id + '' === todoId);
             let isDeleted = false;
             if (targetIndex > -1) {
@@ -126,7 +124,7 @@ mockAdapter
         }
     })
     .onPut(`${todoUri}`)
-    .reply((config: any) => {
+    .reply((config: AxiosRequestConfig) => {
         try {
             const targetTodo = JSON.parse(config.data || {});
             const targetIndex = todos.findIndex((value: TodoResponse) => value.todo_id + '' === targetTodo.todoId);
