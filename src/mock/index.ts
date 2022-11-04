@@ -123,11 +123,12 @@ mockAdapter
             return [500, {message: 'Internal server error'}];
         }
     })
-    .onPut(`${todoUri}`)
+    .onPut(`${todoUri}/:todoId`)
     .reply((config: AxiosRequestConfig) => {
         try {
+            const {todoId} = (config as AxiosRequestRouteConfig).routeParams;
             const targetTodo = JSON.parse(config.data || {});
-            const targetIndex = todos.findIndex((value: TodoResponse) => value.todo_id + '' === targetTodo.todoId);
+            const targetIndex = todos.findIndex((value: TodoResponse) => value.todo_id + '' === todoId);
             let isUpdated = false;
             if (targetIndex) {
                 todos[targetIndex] = targetTodo;

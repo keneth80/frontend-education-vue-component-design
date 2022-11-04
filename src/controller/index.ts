@@ -48,14 +48,17 @@ export function removeTodo(todoId: number): Observable<{
     );
 }
 
-export function modifyTodo(todoId: number): Observable<{
-    isDeleted: boolean;
+export function modifyTodo(
+    todoId: number,
+    todo: TodoRequest
+): Observable<{
+    isUpdated: boolean;
     todoId: number;
 }> {
-    return Http.delete(`/todos/${todoId}`, {}).pipe(
+    return Http.put(`/todos/${todoId}`, todo).pipe(
         map((response: CustomHttpResponse<{is_updated: boolean; todo_id: number}>) => {
             return {
-                isDeleted: response.data.is_updated,
+                isUpdated: response.data.is_updated,
                 todoId: response.data.todo_id
             };
         })

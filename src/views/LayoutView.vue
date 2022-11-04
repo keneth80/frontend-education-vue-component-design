@@ -2,7 +2,7 @@
     <div class="todo">
         <title-component :title="title" />
         <editor-component @addTodo="onAddTodoHandler" />
-        <todo-list-component :todoList="todoList" @removeTodo="onRemoveTodoHandler" />
+        <todo-list-component :todoList="todoList" @removeTodo="onRemoveTodoHandler" @modifyTodo="onModifyTodoHanlder" />
     </div>
 </template>
 
@@ -19,7 +19,7 @@ import TitleComponent from '@/components/TitleComponent.vue';
 import EditorComponent from '@/components/EditorComponent.vue';
 import EditorComponentSecond from '@/components/EditorComponentSecond.vue';
 import TodoListComponent from '@/components/TodoListComponent.vue';
-import {getTodoWithUser, addTodo, getTodos, removeTodo} from '@/controller';
+import {getTodoWithUser, addTodo, getTodos, removeTodo, modifyTodo} from '@/controller';
 import {User, Todo} from '@/mock';
 import {switchMap} from 'rxjs';
 
@@ -73,6 +73,17 @@ export default class LayoutView extends Vue {
                 this.todoListValue = response;
                 alert('삭제되었습니다');
             });
+    }
+
+    public onModifyTodoHanlder({todoId, content}: {todoId: number; content: string}) {
+        modifyTodo(todoId, {
+            user_id: this.userId,
+            content
+        }).subscribe((response: {isUpdated: boolean; todoId: number}) => {
+            if (response.isUpdated) {
+                alert('수정되었습니다.');
+            }
+        });
     }
 
     protected created() {

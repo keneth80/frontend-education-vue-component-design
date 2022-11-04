@@ -2,7 +2,7 @@
     <div class="todo-item">
         <div class="todo-item-end">
             <div class="todo-input">
-                <input type="text" class="todo-input-control" :value="content" />
+                <input type="text" class="todo-input-control" :value="content" @keyup.enter.prevent="onEnterHandler" />
             </div>
             <div class="todo-thumb">
                 <button @click="onClickDeleteHanlder">삭제</button>
@@ -85,6 +85,13 @@ export default class TodoItemComponent extends Vue {
     public onClickDeleteHanlder() {
         this.$emit('removeTodo', {
             todoId: this.item?.todoId
+        });
+    }
+
+    public onEnterHandler(event: KeyboardEvent) {
+        this.$emit('modifyTodo', {
+            todoId: this.item?.todoId,
+            content: (event.target as HTMLInputElement).value
         });
     }
 }
