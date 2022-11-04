@@ -37,7 +37,7 @@ import TextAreaComponent from './form/TextAreaComponent.vue';
     }
 })
 export default class EditorComponent extends Vue {
-    public contents = '';
+    private contents = '';
 
     public onClickAddContent() {
         this.$emit('addTodo', {
@@ -46,7 +46,8 @@ export default class EditorComponent extends Vue {
     }
 
     public onChangeContentHandler(value: any) {
-        console.log('onChangeContentHandler : ', value);
+        this.contents = value.content;
+        console.log('onChangeContentHandler : ', value.content);
     }
 }
 </script>

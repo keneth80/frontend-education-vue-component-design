@@ -30,7 +30,7 @@ export default class TextAreaComponent extends Vue {
     protected mounted() {
         this.subscription.add(
             fromEvent(this.$refs.input as HTMLElement, 'input')
-                .pipe(debounceTime(500), distinctUntilChanged())
+                .pipe(debounceTime(200), distinctUntilChanged())
                 .subscribe((event: Event) => {
                     const textValue = (event.target as HTMLInputElement).value;
                     this.$emit('changeContent', {

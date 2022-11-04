@@ -18,9 +18,10 @@ import {Component, Vue} from 'vue-property-decorator';
 import TitleComponent from '@/components/TitleComponent.vue';
 import EditorComponent from '@/components/EditorComponent.vue';
 import EditorComponentSecond from '@/components/EditorComponentSecond.vue';
-import TodoListComponent from '@/components/TodoListComponent.vue'; // @ is an alias to /src
-import {Http, CustomHttpResponse} from '../utils/http/http-client';
-import {map} from 'rxjs/operators';
+import TodoListComponent from '@/components/TodoListComponent.vue';
+import {getTodoWithUser, addTodo, getTodos} from '@/controller';
+import {User, Todo} from '@/mock';
+import {switchMap} from 'rxjs';
 
 @Component({
     components: {
@@ -33,54 +34,44 @@ import {map} from 'rxjs/operators';
 export default class LayoutView extends Vue {
     private userName = '';
     private userId = 1;
-    private todoListValue = [];
+    private todoListValue: Array<Todo> = [];
 
     get title(): string {
         return `TODO List ${this.userName}`;
     }
 
-    get todoList(): Array<any> {
+    get todoList(): Array<Todo> {
         return this.todoListValue;
     }
 
-    public onAddTodoHandler(value: any) {
-        console.log('onAddTodoHandler : ', value);
+    public onAddTodoHandler({content}: any) {
+        console.log('onAddTodoHandler : ', content);
+
+        if (!content || !content.trim().length) return;
+
+        addTodo({
+            user_id: this.userId,
+            content
+        })
+            .pipe(
+                switchMap(() => {
+                    return getTodos(this.userId);
+                })
+            )
+            .subscribe((response: Array<Todo>) => {
+                this.todoListValue = response;
+                console.log('this.todoListValue : ', this.todoListValue);
+                alert('추가되었습니다.');
+            });
     }
 
     protected created() {
         const searchParams = new URLSearchParams(document.location.search);
         this.userId = parseInt(searchParams.get('userId') || '1');
-        Http.get(`/users/${this.userId}`)
-            .pipe(
-                map((response: CustomHttpResponse<{userId: number; nickname: string}>) => {
-                    return response.data;
-                })
-            )
-            .subscribe((result: {userId: number; nickname: string}) => {
-                this.userName = result.nickname;
-            });
-
-        Http.post('/todos', {
-            content: 'test1'
-        }).subscribe((result: any) => {
-            console.log('result.post : ', result);
-        });
-
-        Http.post('/todos', {
-            content: 'test2'
-        }).subscribe((result: any) => {
-            console.log('result.post2 : ', result);
-        });
-
-        Http.delete('/todos/1', {}).subscribe((result: any) => {
-            console.log('result.delete : ', result);
-        });
-
-        Http.put('/todos', {
-            todoId: 0,
-            content: 'modify'
-        }).subscribe((result: any) => {
-            console.log('result.put : ', result);
+        getTodoWithUser(this.userId).subscribe((response: {user: User; todos: Array<Todo>}) => {
+            this.userName = response.user.nickName;
+            this.todoListValue = response.todos;
+            console.log('getTodoWithUser : ', response);
         });
     }
 }
